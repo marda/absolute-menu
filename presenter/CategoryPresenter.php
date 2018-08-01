@@ -68,9 +68,9 @@ class CategoryPresenter extends MenuBasePresenter
         }
     }
 
-    private function _getCategoryRequest($teamId, $labelId)
-    {
-        $ret = $this->categoryManager->getMenuItem($teamId, $labelId);
+    private function _getCategoryRequest($menuId, $categoryId)
+    { 
+        $ret = $this->categoryManager->getMenuItem($menuId, $categoryId);
         if (!$ret)
             $this->httpResponse->setCode(Response::S404_NOT_FOUND);
         else
@@ -82,6 +82,11 @@ class CategoryPresenter extends MenuBasePresenter
 
     private function _postCategoryRequest($urlId, $urlId2)
     {
+        if(!isset($urlId)||!isset($urlId2))
+        {
+            $this->httpResponse->setCode(Response::S400_BAD_REQUEST);
+            return;
+        }  
         $ret = $this->categoryManager->categoryMenuCreate($urlId, $urlId2);
         if (!$ret)
             $this->httpResponse->setCode(Response::S500_INTERNAL_SERVER_ERROR);
@@ -91,6 +96,11 @@ class CategoryPresenter extends MenuBasePresenter
 
     private function _deleteCategoryRequest($urlId, $urlId2)
     {
+        if(!isset($urlId)||!isset($urlId2))
+        {
+            $this->httpResponse->setCode(Response::S400_BAD_REQUEST);
+            return;
+        } 
         $ret = $this->categoryManager->categoryMenuDelete($urlId, $urlId2);
         if (!$ret)
             $this->httpResponse->setCode(Response::S404_NOT_FOUND);

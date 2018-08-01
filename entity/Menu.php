@@ -138,7 +138,7 @@ class Menu extends BaseEntity
   {
     foreach ($this->subMenus as $key => $menu)
     {
-      if ($menu->id == $menuId)
+      if ($menu->getId() == $menuId)
       {
         unset($this->subMenus[$key]);
       }
@@ -154,12 +154,12 @@ class Menu extends BaseEntity
 
   public function addUser($user) 
   {
-    $this->users[$user->id] = $user;
+    $this->users[$user->getId()] = $user;
   }
 
   public function addTeam($team) 
   {
-    $this->teams[$team->id] = $team;
+    $this->teams[$team->getId()] = $team;
   }
 
   public function addCategory($category) 

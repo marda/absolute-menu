@@ -31,7 +31,7 @@ class DefaultPresenter extends MenuBasePresenter
                     $this->_getListRequest();
                 break;
             case 'POST':
-                $this->_postRequest($resourceId);
+                $this->_postRequest();
                 break;
             case 'PUT':
                 if ($resourceId != null)
@@ -69,7 +69,7 @@ class DefaultPresenter extends MenuBasePresenter
 
     private function _getListRequest()
     {
-        $menus = $this->menuManager->getUserVisibleList($this->user->id);
+        $menus = $this->menuManager->getList();
         $this->httpResponse->setCode(Response::S200_OK);
 
         $this->jsonResponse->payload = array_map(function($n)
@@ -95,6 +95,11 @@ class DefaultPresenter extends MenuBasePresenter
 
     private function _putRequestOrder()
     {
+        if(!isset($id))
+        {
+            $this->httpResponse->setCode(Response::S400_BAD_REQUEST);
+            return;
+        } 
         $post = $this->httpRequest->getRawBody();
         $this->jsonResponse->payload = [];
         $ret = $this->menuCRUDManager->order($post);
@@ -108,7 +113,7 @@ class DefaultPresenter extends MenuBasePresenter
         }
     }
 
-    private function _postRequest($urlId)
+    private function _postRequest()
     {
         $post = json_decode($this->httpRequest->getRawBody());
         $ret = $this->menuCRUDManager->create($post->module, $post->name, $post->icon, $post->tooltip, $post->page_id, $post->menu_id, $post->type);
@@ -118,12 +123,24 @@ class DefaultPresenter extends MenuBasePresenter
         }
         else
         {
+            if (isset($post->categories))
+                $this->menuCRUDManager->connectCategories($ret, $post->categories);
+            if (isset($post->teams))
+                $this->menuCRUDManager->connectTeams($ret, $post->teams);
+            if (isset($post->users))
+                $this->menuCRUDManager->connectUsers($ret, $post->users);
+            
             $this->httpResponse->setCode(Response::S201_CREATED);
         }
     }
 
     private function _deleteRequest($id)
     {
+        if(!isset($id))
+        {
+            $this->httpResponse->setCode(Response::S400_BAD_REQUEST);
+            return;
+        } 
         $this->menuCRUDManager->delete($id);
         $this->httpResponse->setCode(Response::S200_OK);
     }

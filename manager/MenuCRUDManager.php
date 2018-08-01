@@ -145,7 +145,18 @@ class MenuCRUDManager extends BaseCRUDManager
 
     public function update($id, $array)
     {
+        if(isset($array['categories']))
+            $this->connectCategories ($id, $array['categories']);
+        if(isset($array['teams']))
+            $this->connectTeams ($id, $array['teams']);
+        if(isset($array['users']))
+            $this->connectUsers ($id, $array['users']);
+            
         unset($array['id']);
+        unset($array['categories']);
+        unset($array['teams']);
+        unset($array['users']);
+        
         $array['modified']=new \DateTime();
         if ($array["menu_id"] && !$this->_checkMenuRecursion($id, $array["menu_id"]))
         {

@@ -83,6 +83,11 @@ class TeamPresenter extends MenuBasePresenter
 
     private function _postTeamRequest($urlId, $urlId2)
     {
+        if(!isset($urlId)||!isset($urlId2))
+        {
+            $this->httpResponse->setCode(Response::S400_BAD_REQUEST);
+            return;
+        }  
         $ret = $this->teamManager->teamMenuCreate($urlId, $urlId2);
         if (!$ret)
             $this->httpResponse->setCode(Response::S500_INTERNAL_SERVER_ERROR);
@@ -92,6 +97,11 @@ class TeamPresenter extends MenuBasePresenter
 
     private function _deleteTeamRequest($urlId, $urlId2)
     {
+        if(!isset($urlId)||!isset($urlId2))
+        {
+            $this->httpResponse->setCode(Response::S400_BAD_REQUEST);
+            return;
+        }  
         $ret = $this->teamManager->teamMenuDelete($urlId, $urlId2);
         if (!$ret)
             $this->httpResponse->setCode(Response::S404_NOT_FOUND);
